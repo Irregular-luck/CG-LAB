@@ -1,49 +1,46 @@
-# Car - Bresenham line algorithm
-import math
 import matplotlib.pyplot as plt
 
-def bresenham(x1, y1, x2, y2):
-    dx, dy = abs(x2 - x1), abs(y2 - y1)
-    sx = 1 if x2 > x1 else -1
-    sy = 1 if y2 > y1 else -1
+def line(x0, y0, x1, y1):
+    dx, dy = abs(x1 - x0), abs(y1 - y0)
+    sx = 1 if x0 < x1 else -1
+    sy = 1 if y0 < y1 else -1
     err = dx - dy
-    pts = []
+    xs=[]
+    ys=[]
     while True:
-        pts.append((x1, y1))
-        if x1 == x2 and y1 == y2:
+
+        xs.append(x0)
+        ys.append(y0)
+        
+        if x0 == x1 and y0 == y1:
             break
         e2 = 2 * err
         if e2 > -dy:
             err -= dy
-            x1 += sx
+            x0 += sx
         if e2 < dx:
             err += dx
-            y1 += sy
-    return pts
+            y0 += sy
+    plt.plot(xs, ys, color="black")
 
+# body
+line(0, 2, 20, 2)     # bottom
+line(0, 2, 0, 6)      # front
+line(0, 6, 6, 6)      # hood
+line(6, 6, 9, 10)     # windshield
+line(9, 10, 15, 10)   # roof
+line(15, 10, 18, 6)   # rear window
+line(18, 6, 20, 6)    # trunk
+line(20, 6, 20, 2)    # back
 
+# wheels (squares)
+line(3, 0, 7, 0)
+line(3, 0, 3, 2)
+line(7, 0, 7, 2)
 
-def polygon(p):
-    pts = []
-    for i in range(len(p)):
-        x1, y1 = p[i]
-        x2, y2 = p[(i + 1) % len(p)]
-        pts += bresenham(x1, y1, x2, y2)
-    return pts
+line(13, 0, 17, 0)
+line(13, 0, 13, 2)
+line(17, 0, 17, 2)
 
-
-def wheel(cx, cy, r):
-    return [(round(cx + r * math.cos(math.radians(a))),
-             round(cy + r * math.sin(math.radians(a)))) for a in range(0, 360, 45)]
-
-
-body = [(10, 20), (90, 20), (90, 40), (70, 40), (60, 60), (30, 60), (20, 40), (10, 40)]
-window1 = [(33, 42), (36, 56), (46, 56), (46, 42)]
-window2 = [(50, 42), (50, 56), (58, 56), (65, 42)]
-pts = polygon(body) + polygon(window1) + polygon(window2)
-pts += polygon(wheel(30, 20, 8)) + polygon(wheel(70, 20, 8))
-
-plt.plot([p[0] for p in pts], [p[1] for p in pts], "k.", markersize=3)
 plt.axis("equal")
-plt.title("Car - Bresenham line algorithm")
 plt.show()
